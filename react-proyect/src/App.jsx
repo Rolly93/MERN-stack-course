@@ -1,10 +1,9 @@
-import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import chef from "./images/chef.jpg"
+import { useReducer, useEffect } from 'react';
 
-let languaje = "JavaScript";
 function Header ({name , year}){
   console.log({name , year})
   return(
@@ -17,11 +16,12 @@ function Header ({name , year}){
   )
 }
 
-function Main({dishes}) {
+function Main({dishes , openStatus , onStatus}) {
   return(
 <>    
   <div>
-      <h2>Welcom to this beatufil Restaurant</h2>
+    <button onClick={()=>onStatus(true)}>i want to be open</button>
+      <h2>Welcom to this beatufil Restaurant {" "} {openStatus ? "Open":"Close"}</h2>
     </div>
   <main>
     <img 
@@ -49,12 +49,28 @@ const dishObjects= items.map((dish,i)=>({
   title:dish
 }))
 
-
 function App() {
-    return ( 
+
+const [status , toggle] =useReducer(
+  (status)=>!status,true
+);
+  
+useEffect(()=>{
+  console.log(`The restaurat is ${status ? "Open" : "Closed"}`)
+,[status]});
+return ( 
     <div>
+      <h1>The restaurand es currently {" "} {status ? "Open":"Close"}. </h1>
+      < button onClick={toggle } >
+      {status ? "Open":"Close"} Restaurant
+      </button>
+
       <Header name="Rolan" year={new Date().getFullYear() } />
-      <Main dishes = {dishObjects}/>
-    </div>);
+      <Main 
+      dishes = {dishObjects} 
+      openStatus={status} 
+      onStatus={toggle}/>
+    </div>
+    );
 }
 export default App
